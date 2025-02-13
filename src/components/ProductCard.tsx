@@ -1,15 +1,29 @@
 
 import { Card } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sparkles, ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
+  id: number;
   title: string;
   price: number;
   image: string;
   category: string;
 }
 
-const ProductCard = ({ title, price, image, category }: ProductCardProps) => {
+const ProductCard = ({ id, title, price, image, category }: ProductCardProps) => {
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
+    addItem({ id, title, price, image, category });
+    toast({
+      title: "Added to cart",
+      description: `${title} has been added to your cart.`,
+    });
+  };
+
   return (
     <Card className="group relative overflow-hidden rounded-lg bg-white/10 backdrop-blur-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
       <div className="aspect-square overflow-hidden">
@@ -29,6 +43,14 @@ const ProductCard = ({ title, price, image, category }: ProductCardProps) => {
         </div>
         <h3 className="mt-2 text-lg font-semibold text-gray-100">{title}</h3>
         <p className="mt-1 text-2xl font-bold text-primary">${price}</p>
+        <Button
+          onClick={handleAddToCart}
+          className="mt-4 w-full gap-2"
+          variant="secondary"
+        >
+          <ShoppingCart className="h-4 w-4" />
+          Add to Cart
+        </Button>
       </div>
     </Card>
   );

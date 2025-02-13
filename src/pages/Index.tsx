@@ -1,6 +1,7 @@
-
 import { Star, Atom, CircuitBoard } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+import Cart from "@/components/Cart";
+import { CartProvider } from "@/contexts/CartContext";
 
 const FEATURED_PRODUCTS = [
   {
@@ -46,55 +47,64 @@ const CATEGORIES = [
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-[#1A1F2C]">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden px-6 py-24 sm:px-12 sm:py-32">
-        <div className="absolute inset-0 z-0 bg-gradient-to-br from-primary/20 to-transparent" />
-        <div className="relative z-10 mx-auto max-w-7xl">
-          <div className="animate-fade-up text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              Future Merch Magic
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-300">
-              Discover our collection of future-ready merchandise, designed for the next generation.
-            </p>
-          </div>
+    <CartProvider>
+      <div className="min-h-screen bg-[#1A1F2C]">
+        <div className="fixed right-4 top-4 z-50">
+          <Cart />
         </div>
-      </section>
 
-      {/* Categories */}
-      <section className="px-6 py-16 sm:px-12">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="mb-12 text-center text-3xl font-bold text-white">Shop by Category</h2>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {CATEGORIES.map((category) => (
-              <div
-                key={category.title}
-                className="group animate-fade-in rounded-xl bg-white/5 p-6 backdrop-blur-lg transition-all duration-300 hover:bg-white/10"
-              >
-                <category.icon className="mb-4 h-8 w-8 text-primary" />
-                <h3 className="mb-2 text-xl font-semibold text-white">{category.title}</h3>
-                <p className="text-gray-400">{category.description}</p>
-              </div>
-            ))}
+        <section className="relative overflow-hidden px-6 py-24 sm:px-12 sm:py-32">
+          <div className="absolute inset-0 z-0 bg-gradient-to-br from-primary/20 to-transparent" />
+          <div className="relative z-10 mx-auto max-w-7xl">
+            <div className="animate-fade-up text-center">
+              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+                Future Merch Magic
+              </h1>
+              <p className="mt-6 text-lg leading-8 text-gray-300">
+                Discover our collection of future-ready merchandise, designed for the next generation.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Featured Products */}
-      <section className="px-6 py-16 sm:px-12">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="mb-12 text-center text-3xl font-bold text-white">Featured Products</h2>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURED_PRODUCTS.map((product) => (
-              <div key={product.id} className="animate-fade-in">
-                <ProductCard {...product} />
-              </div>
-            ))}
+        <section className="px-6 py-16 sm:px-12">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="mb-12 text-center text-3xl font-bold text-white">
+              Shop by Category
+            </h2>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {CATEGORIES.map((category) => (
+                <div
+                  key={category.title}
+                  className="group animate-fade-in rounded-xl bg-white/5 p-6 backdrop-blur-lg transition-all duration-300 hover:bg-white/10"
+                >
+                  <category.icon className="mb-4 h-8 w-8 text-primary" />
+                  <h3 className="mb-2 text-xl font-semibold text-white">
+                    {category.title}
+                  </h3>
+                  <p className="text-gray-400">{category.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        <section className="px-6 py-16 sm:px-12">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="mb-12 text-center text-3xl font-bold text-white">
+              Featured Products
+            </h2>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {FEATURED_PRODUCTS.map((product) => (
+                <div key={product.id} className="animate-fade-in">
+                  <ProductCard {...product} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    </CartProvider>
   );
 };
 
