@@ -1,8 +1,29 @@
+
 import { useState } from "react";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 // Use the same products data as in Home
 const PRODUCTS = [
@@ -76,6 +97,7 @@ const CATEGORIES = ["All", "Apparel", "Accessories", "Bags", "Footwear"];
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
 
   const filteredProducts = PRODUCTS.filter((product) => {
     const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
@@ -84,11 +106,18 @@ const Products = () => {
   });
 
   return (
-    <div className="container py-16">
-      <h1 className="mb-8 text-3xl font-bold">Our Products</h1>
-      
-      {/* Filters */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="container py-8">
+      {/* Products Grid - Moved to top */}
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {filteredProducts.map((product) => (
+          <div key={product.id} className="animate-fade-in">
+            <ProductCard {...product} />
+          </div>
+        ))}
+      </div>
+
+      {/* Filters - Moved below products */}
+      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex gap-2">
           {CATEGORIES.map((category) => (
             <Button
@@ -102,23 +131,36 @@ const Products = () => {
           ))}
         </div>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-[200px] justify-start">
+                <Search className="mr-2 h-4 w-4" />
+                {searchQuery || "Search products..."}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-0">
+              <Command>
+                <CommandInput placeholder="Search products..." />
+                <CommandEmpty>No products found.</CommandEmpty>
+                <CommandGroup>
+                  {PRODUCTS.filter(product =>
+                    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+                  ).map((product) => (
+                    <CommandItem
+                      key={product.id}
+                      onSelect={() => {
+                        setSearchQuery(product.title);
+                        setOpen(false);
+                      }}
+                    >
+                      {product.title}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
-      </div>
-
-      {/* Products Grid */}
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredProducts.map((product) => (
-          <div key={product.id} className="animate-fade-in">
-            <ProductCard {...product} />
-          </div>
-        ))}
       </div>
 
       {filteredProducts.length === 0 && (
